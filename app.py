@@ -36,5 +36,12 @@ def get_task(id):
          return jsonify(t.to_dict())
     return jsonify({"message": "Não foi possível encontrar a atividade."}), 404
 
+@app.route('/user/<username>')
+def show_user(username):
+    print(username)
+    print(type(username))
+    return str(username)
+    
+
 if __name__ == '__main__':
     app.run(debug=True)
