@@ -9,6 +9,7 @@ app = Flask(__name__)
 tasks = []
 task_id_control = 1
 
+# Criando uma tarefa
 @app.route('/tasks', methods=['POST'])
 def create_task():
     global task_id_control
@@ -18,7 +19,8 @@ def create_task():
     tasks.append(new_data)
     print(tasks )
     return jsonify({"message": "Nova tarefa criada com sucesso."}), 201
-@app.route('/tasks', methods=['GET'])
+
+# Lendo todas as tarefas
 def get_tasks():
     tasks_list = [task.to_dict() for task in tasks]
 
@@ -28,6 +30,7 @@ def get_tasks():
     }
     return jsonify(output)
 
+# Lendo uma tarefa
 @app.route('/tasks/<int:id>', methods=['GET'])
 def get_task(id):
     task = None
@@ -36,12 +39,40 @@ def get_task(id):
          return jsonify(t.to_dict())
     return jsonify({"message": "Não foi possível encontrar a atividade."}), 404
 
-@app.route('/user/<username>')
-def show_user(username):
-    print(username)
-    print(type(username))
-    return str(username)
+# Atualizando uma tarefa
+@app.route('/tasks/<int:id>', methods=['PUT'])
+def update_task(id):
+    task = None
+    for t in tasks:
+        if t.id == id:
+            task = t
+            break
+    print(task)
+        
+    if task is None:
+        return jsonify({"message": "Não foi possível encontrar a atividade."}), 404
     
+    data = request.get_json()
+    task.title = data['title']
+    task.description = data['description']
+    task.completed = data['completed']
+    print(task)
+    return jsonify({"message": "Tarefa atualizada com sucesso."})
+
+# Deletando uma tarefa
+@app.route('/tasks/<int:id>', methods=['DELETE'])
+def delete_task(id):
+    task = None
+    for t in tasks:
+        if t.id == id:
+            task = t
+            break
+    
+    if task is None:
+        return jsonify({"message": "Não foi possível encontrar a atividade."}), 404
+    
+    tasks.remove(task)
+    return jsonify({"message": "Tarefa removida com sucesso."})
 
 if __name__ == '__main__':
     app.run(debug=True)
