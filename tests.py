@@ -39,6 +39,5 @@ def test_get_task():
     response = requests.get(f"{BASE_URL}/tasks/{task_id}")
     assert response.status_code == 200
     response_json = response.json()
-    assert isinstance(response_json, dict)
-    assert "id" in response_json
-    assert task_id == response_json['id']
+    assert isinstance(response_json, dict)  # Garante que o retorno é um dicionário
+    assert response_json['id'] == task_id
